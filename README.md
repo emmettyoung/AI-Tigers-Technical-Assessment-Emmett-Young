@@ -5,6 +5,8 @@
 
 # AI Solutions Analyst — Technical Assessment
 
+Please use the following repository as a template: [Constellation-Engineering/ai-tigers-technical](https://github.com/Constellation-Engineering/ai-tigers-technical)
+
 Welcome to the Constellation AI Solutions Analyst technical assessment. We are excited to see your skills in action.
 
 This assessment is designed to evaluate a range of practical skills you will use day-to-day as an AI Solutions Analyst: authentication fundamentals, working with external APIs, basic prompt engineering, and the ability to ship functional software quickly. Everyone here leverages AI tooling to accelerate development — we expect you to do the same.
