@@ -5,7 +5,7 @@
 
 # AI Solutions Analyst — Technical Assessment
 
-Welcome to the Constellation engineering assessment. We are excited to see your skills in action.
+Welcome to the Constellation AI Solutions Analyst technical assessment. We are excited to see your skills in action.
 
 This assessment is designed to evaluate a range of practical skills you will use day-to-day as an AI Solutions Analyst: authentication fundamentals, working with external APIs, basic prompt engineering, and the ability to ship functional software quickly. Everyone here leverages AI tooling to accelerate development — we expect you to do the same.
 
@@ -23,13 +23,14 @@ Build a locally-runnable web application in any language/framework of your choos
 
 ### 1. Authentication
 
-Implement a basic login screen. The system must allow a user to authenticate using **only** these exact hardcoded credentials:
+Implement a basic login screen with a simple hardcoded credential check. No real authentication infrastructure is expected (no password hashing, no user database, no OAuth, etc.). The login should accept **only** these exact credentials:
 
 | Field    | Value                            |
 | -------- | -------------------------------- |
 | Email    | `example@helloconstellation.com` |
 | Password | `ConstellationInterview123!`     |
 
+- A plain string comparison against the hardcoded values above is sufficient.
 - On successful login, generate and store a **JWT token** to manage the session.
 - The authenticated user's name (e.g., "Example User") must be visible in the UI after login.
 - All routes beyond the login screen must be protected — unauthenticated requests should redirect to login.
@@ -63,7 +64,7 @@ Your submission consists of three parts:
 
 ### (1) Infrastructure Writeup
 
-In your README or a dedicated section, provide a brief writeup (a few paragraphs is fine) covering:
+In your README, provide a brief writeup (a few paragraphs is fine) covering:
 
 - What technologies and libraries you chose and why.
 - How the authentication flow works end-to-end (login → JWT → protected routes).
@@ -77,14 +78,16 @@ In the same document, address the following (again, a few paragraphs is sufficie
 - How would you handle **security** at scale (token management, secrets, rate limiting, etc.)?
 - What observability or monitoring would you add?
 
-### (3) Public GitHub Repository
+### (3) GitHub Repository
 
-Push your solution to a **public** GitHub repository and submit the link. The repository must include:
+Use the **"Use this template"** button on this repository to create your own public repo, then build your solution there. Your repository must include:
 
-- A `README.md` with clear instructions to run the project locally.
+- A new `README.md` (replacing this one) with clear instructions to run the project locally.
 - All required environment variables documented (names, purpose, and where to obtain them — but not the values themselves).
 - The hardcoded credentials listed above so the reviewer can log in without any additional setup.
 - A working application reachable at `localhost:3000` (or equivalent) after following your README.
+
+Submit the link to your repository when complete.
 
 ---
 
