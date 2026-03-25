@@ -80,7 +80,7 @@ In the same document, address the following (again, a few paragraphs is sufficie
 - How would you handle **security** at scale (token management, secrets, rate limiting, etc.)?
 - What observability or monitoring would you add?
 
-### (3) GitHub Repository
+### (3) Public GitHub Repository
 
 Use the **"Use this template"** button on this repository to create your own public repo, then build your solution there. Your repository must include:
 
