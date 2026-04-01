@@ -1,117 +1,31 @@
-<div align="center">
-  <img src="constellationsoftware-icon.png" alt="Constellation" width="220" />
-  <br /><br />
-</div>
+1. Infrastructure Write Up:
 
-# AI Solutions Analyst — Technical Assessment
+Technologies: For my backend I utilized flask for the creating an API endpoint as it was simply the format I was most comfortable with from classes I have taken at Brown. Organizationally, Flask is incredibly intuitive with its structure of "routes" as well as then, it also offers easy decoding mechanisms for when backend connections were faulty. 
 
-Please use the following repository as a template: [Constellation-Engineering/ai-tigers-technical](https://github.com/Constellation-Engineering/ai-tigers-technical)
+Libraries: The libraries I used followed a similar intuitive path where I used the google library to connect gemeni,  then the dotenv so that I could connect my backend file with my environment file to keep the api key secure. For processing the database I simply used the sqlite library, utilizing specifically sqlite3 to process the database and then allow viewage. The next two libraries I used were simply for the login portion of the assignment. To log JWT tokens I used the PyJWT library and datetime. These allowed me to make sure all actions on the site had been authentication (token) before being preformed. The last library I used was CORS which was critical to the functionality of the program as it allowed for the ports to communicate with each other (front end being 3000, backend being 5001)
 
-Welcome to the Constellation AI Solutions Analyst technical assessment. We are excited to see your skills in action.
+Authentication: When the user goes to the website they are prompted with a sign-in option where the only possible sign in (as provided) is hard-coded in the backend for security. From there, upon successful signing in the user is assigned a token that expires after 8 hours. The token allows the user to utilize the different functions of seeing the table as well as querying it. If the user were to log out the token would be removed. 
 
-This assessment is designed to evaluate a range of practical skills you will use day-to-day as an AI Solutions Analyst: authentication fundamentals, working with external APIs, basic prompt engineering, and the ability to ship functional software quickly. Everyone here leverages AI tooling to accelerate development — we expect you to do the same.
+AI pipeline: Below the table you will see a query box as well as a query button. The user would input any query into the input box then click the query button to send the query. On the inside this looks the following:
+- After the query button is clicked, gemini queries over the database for just table names and column names to provide context for a sql query without scanning the entire table. 
+- Gemini then writes only a valid sql query that the function "run_query" takes in and runs through the sqlite database file
+- The results from the run_query function are then sent back to gemini where gemini then returns a humanized version of the results
 
-> **Note on UI/UX:** This project is judged purely on functionality. Do not spend time polishing the interface. We care about robust backend logic, correct data flow, and problem-solving ability.
+2. Scale & Production Design 
 
----
+If this application was deployed to hundreds of people I would change the processing of database and querying. Currently I am using sqlite which is not sustainable under a real load. I would transition to a proper data base that would allow for more load. With that being said, the main stressor on the site would come from the gemini api queries so to accomodate to this I would create an event queue that would allow for asynch calls to be made and more queries to be handled at once. 
 
-## The Task
+With regards to secruity, currently a lot of variables are hard coded into the files. If the site was meant to accomodate a larger load of users I would pivot to using a system that manage these variables that are meant to be secrets and unaccessible to users. Also, currently the JWT tokens simply have an "expiration date" which would not be the most optimal for many users. To accomodate to many users, especially ones frequently coming and going I would implement a way to refresh the token. Rate limiting would be a relatively simple solve as I would simply implement a mechanism that either tracks the total queries a user makes over a determined time period, or to accomodate to the monetary aspect of queries, tracks the anticipated money associated with each query. 
 
-Build a locally-runnable web application in any language/framework of your choosing. The application must satisfy the following three areas of functionality.
+My logging system right now is purely limited to the simple system that flask has in place. This give basic error messaging like when the backend is connected or not but if there was an increase in users of the site, I would implement a much more structured system that provided key details on each user action (username, time, action, response). In addition to more articulate logging I would also make sure to add metrics that tell us how efficiently the system is operating as a whole (percentage of requests that are going through, cost per request, etc)
 
----
+How to run the site:
+- In a terminal, after being inside the AI-Tigers-Technical folder run "python backend.py"
+- In a different terminal then run "npm run dev" and click the local link that will be outputted
 
-## Features to Implement
+End information:
+- API Key -> In the .env file, labeled GEMINI_API_KEY, used for gemini
+- JWT Key -> Backend.py file, used for tokening
 
-### 1. Authentication
-
-Implement a basic login screen with a simple hardcoded credential check. No real authentication infrastructure is expected (no password hashing, no user database, no OAuth, etc.). The login should accept **only** these exact credentials:
-
-| Field    | Value                            |
-| -------- | -------------------------------- |
-| Email    | `example@helloconstellation.com` |
-| Password | `ConstellationInterview123!`     |
-
-- A plain string comparison against the hardcoded values above is sufficient.
-- On successful login, generate and store a **JWT token** to manage the session.
-- The authenticated user's name (e.g., "Example User") must be visible in the UI after login.
-- All routes beyond the login screen must be protected — unauthenticated requests should redirect to login.
-
----
-
-### 2. Data Table Preview
-
-You will be provided with a `.db` file (SQLite) containing a dataset. Once authenticated, the user must be able to:
-
-- View the data in a **scrollable table** that previews all rows and columns.
-- The table must load the data directly from the provided `.db` file — no external database setup required.
-
----
-
-### 3. AI-Powered Chat Interface
-
-Below the data table, implement a plain-English chat input. The user should be able to type a question about the data (e.g., *"How many records are from New York?"* or *"What is the average value in column X?"*) and receive a response.
-
-**Requirements:**
-
-- Use the **Google Gemini API** as the underlying model. Your API key must be read from an environment variable — **do not hardcode or commit it**.
-- The AI agent must translate the user's natural language question into a SQL query, run it against the `.db` file, and return a clear, human-readable answer.
-- The parsing, querying, and response logic must be handled programmatically — no passing raw HTML or full table dumps to the model.
-
----
-
-## Submission Requirements
-
-Your submission consists of three parts:
-
-### (1) Infrastructure Writeup
-
-In your README, provide a brief writeup (a few paragraphs is fine) covering:
-
-- What technologies and libraries you chose and why.
-- How the authentication flow works end-to-end (login → JWT → protected routes).
-- How the AI chat pipeline works (user query → SQL generation → execution → response).
-
-### (2) Scale & Production Design
-
-In the same document, address the following (again, a few paragraphs is sufficient):
-
-- If this application were deployed to support **hundreds of monthly active users**, what architectural changes would you make?
-- How would you handle **security** at scale (token management, secrets, rate limiting, etc.)?
-- What observability or monitoring would you add?
-
-### (3) Public GitHub Repository
-
-Use the **"Use this template"** button on this repository to create your own public repo, then build your solution there. Your repository must include:
-
-- A new `README.md` (replacing this one) with clear instructions to run the project locally.
-- All required environment variables documented (names, purpose, and where to obtain them — but not the values themselves).
-- The hardcoded credentials listed above so the reviewer can log in without any additional setup.
-- A working application reachable at `localhost:3000` (or equivalent) after following your README.
-
-Submit the link to your repository when complete.
-
----
-
-## Evaluation Criteria
-
-| Area                        | What We Are Looking For                                                                 |
-| --------------------------- | --------------------------------------------------------------------------------------- |
-| Authentication & JWT        | Correct implementation of login flow and token-based session management                 |
-| Data Handling               | Ability to read from a SQLite file and surface data cleanly                             |
-| AI Integration              | Structured prompting, SQL generation, and clean response formatting via Gemini          |
-| Code Quality & Organization | Readable, organized code — not perfect, but maintainable                                |
-| Version Control             | Meaningful commits, clean repo structure                                                |
-| Documentation               | Clear README, infrastructure writeup, and scale discussion                              |
-
----
-
-## Notes
-
-- **AI use is not only allowed, but strongly encouraged.** A large part of this role is the ability to leverage tools like Cursor, GitHub Copilot, and AI agents to ship quickly. This project would take significantly longer than necessary without them.
-- Do not worry about deploying the application — local execution is sufficient.
-- If you have any questions about the requirements, use your best judgment and document your assumptions.
-
----
-
-*Good luck — we look forward to reviewing your solution.*
+User name: example@helloconstellation.com
+Password: ConstellationInterview123!
